@@ -46,6 +46,8 @@
 
     /* 시간이 끝났을 때 적용되는 시각적 피드백 */
     .finished #display { color: #e53935; transform: scale(1.04); }
+    /* 마지막 10초는 완료 전에도 숫자를 빨간색으로 강조합니다. */
+    .urgent #display { color: #e53935; }
 
     #message { min-height: 22px; margin: 0 0 24px; color: #787774; font-size: 0.9rem; font-weight: 500; }
     .finished #message { color: #e53935; }
@@ -176,6 +178,7 @@
     function tick() {
       remainingSeconds -= 1;
       renderTime(remainingSeconds);
+      timerCard.classList.toggle('urgent', remainingSeconds > 0 && remainingSeconds <= 10);
 
       // 00:00에 도달하면 타이머를 종료하고 완료 상태를 표시합니다.
       if (remainingSeconds <= 0) {
@@ -197,6 +200,7 @@
 
       remainingSeconds = Math.floor(inputMinutes * 60);
       timerCard.classList.remove('finished');
+      timerCard.classList.toggle('urgent', remainingSeconds <= 10);
       message.textContent = '집중 중...';
       renderTime(remainingSeconds);
       timerId = setInterval(tick, 1000);
@@ -228,6 +232,7 @@
       remainingSeconds = 0;
       renderTime(0);
       timerCard.classList.remove('finished');
+      timerCard.classList.remove('urgent');
       message.textContent = '분을 입력하고 시작하세요.';
       updateControls(false);
     });
